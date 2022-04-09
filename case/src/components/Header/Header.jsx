@@ -1,19 +1,27 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { searchVideo } from '../../store/action/searchAction';
 import {
   Container, Column, Row, Nav, LinkText, SearchInput, SearchButton,
 } from './Styles';
 import Headerlogo from '../../Images/Headerlogo.png';
 
-export function Header() {
+function Header() {
   const [search, setSearch] = useState('');
   const Change = ({ target }) => {
     setSearch(target.value);
   };
 
-  const Submit = ({ target }) => {
-    setSearch(target.value);
+  const Submit = () => {
     console.log(search);
+    searchVideo(search);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      Submit();
+    }
   };
 
   return (
@@ -28,7 +36,7 @@ export function Header() {
             type="text"
             onChange={Change}
           />
-          <SearchButton type="button" onClick={Submit}>Search</SearchButton>
+          <SearchButton type="button" onClick={Submit} onKeyDown={handleKeyDown}>Search</SearchButton>
         </Row>
         <Row>
           <Nav>
@@ -57,6 +65,14 @@ export function Header() {
         </Row>
       </Column>
     </Container>
-
   );
 }
+
+// eslint-disable-next-line
+const mapDispatchToProps = (dispatch) => ({
+  searchVideo: (params) => {
+    searchVideo(params);
+  },
+});
+
+export default connect(null, mapDispatchToProps)(Header);
